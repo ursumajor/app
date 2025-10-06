@@ -15,7 +15,6 @@ const Display = (props) => {
             })
             const j_data = await response.json()
             set_json_data(j_data)
-            console.log(j_data)
         } catch (err){
             console.error(err.message);
         }

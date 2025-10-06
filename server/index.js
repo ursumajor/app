@@ -3,13 +3,13 @@ const app = express();
 import cors from "cors";
 import pool from "./db.js";
 import dataRouter from "./routes/dataRoutes.js";
-import uploadFile from "./aws/upload-file.js";
+import awsRouter from "./routes/awsRoutes.js"
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/data", dataRouter)
-
+app.use("/aws", awsRouter)
 
 
 const server = app.listen(5000, () => {
