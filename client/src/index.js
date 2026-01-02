@@ -5,12 +5,14 @@ import './index.css';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
+console.log("domain:" + process.env.REACT_APP_AUTH0_DOMAIN)
+console.log("Client id:" + process.env.REACT_APP_AUTH0_CLIENT_ID)
+console.log("audience:" + process.env.REACT_APP_AUTH0_AUDIENCE)
 root.render(
   <React.StrictMode>
   <Auth0Provider
-      domain="dev-lkde6yjhcf51358w.us.auth0.com"
-      clientId="UuRiIRje2AMEami6ejnWd3LCHJ0Oxsr8"
+      domain={process.env.REACT_APP_AUTH0_DOMAIN}
+      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
       authorizationParams={{
       redirect_uri: "http://localhost:3000"
     }}
