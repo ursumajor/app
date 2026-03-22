@@ -1,5 +1,6 @@
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255),
-    password VARCHAR(15),
+    auth0_id VARCHAR(255) UNIQUE,
+    username VARCHAR(255) UNIQUE,
+    pfp_url VARCHAR(2048)
 );

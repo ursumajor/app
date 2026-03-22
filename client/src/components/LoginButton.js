@@ -6,7 +6,11 @@ const LoginButton = () => {
   return (
     <div>
       {!isAuthenticated && (
-        <button onClick={() => loginWithRedirect()}>
+        <button onClick={() => loginWithRedirect({
+          authorizationParams: {
+            audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+            scope: "read:profile write:profile"
+          }})}>
           Log In
         </button>
       )}

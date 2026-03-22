@@ -1,4 +1,6 @@
-CREATE TABLE image_data(
+CREATE TABLE images(
     id SERIAL PRIMARY KEY,
-    description VARCHAR(255)
+    fname VARCHAR(255),
+    upload_date DATE DEFAULT CURRENT_DATE,
+    user_id INTEGER references users(id)
 );
