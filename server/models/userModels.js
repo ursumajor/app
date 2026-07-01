@@ -29,20 +29,21 @@ const findOrCreateUser = async (auth0_id) => {
     return await insertUser(auth0_id);
 };
 
-// const inputUser = async (description) => {
-//     const inserted_data = await pool.query("INSERT INTO data (description) VALUES($1) RETURNING *", [description]);
-//     return inserted_data.rows[0]
-// }
+const getUserByUsername = async (username) => {
+    const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+    return user.rows[0];
+};
 
-// const editDatum = async (id, newDescription) => {
-//     const updated_data = await pool.query(
-//       "UPDATE data SET description = $1 WHERE id = $2",
-//       [newDescription, id]
-//     );
-// }
+const updateUser = async (id, { username, pfp_url }) => {
+    const result = await pool.query(
+        `UPDATE users
+         SET username = COALESCE($1, username),
+             pfp_url  = COALESCE($2, pfp_url)
+         WHERE id = $3
+         RETURNING *`,
+        [username ?? null, pfp_url ?? null, id]
+    );
+    return result.rows[0];
+};
 
-// const deleteDatum = async (id) => {
-//     await pool.query("DELETE FROM data WHERE id = $1", [id]);
-// }
-
-export {getAllUsers, getUserById, getUserByAuth0Id, insertUser, findOrCreateUser}
+export {getAllUsers, getUserById, getUserByAuth0Id, insertUser, findOrCreateUser, getUserByUsername, updateUser}

@@ -1,6 +1,0 @@
-CREATE DATABASE db;
-
-CREATE TABLE data(
-    id SERIAL PRIMARY KEY,
-    description VARCHAR(255)
-);

@@ -2,17 +2,15 @@ import express from "express";
 const app = express();
 import cors from "cors";
 import pool from "./db.js";
-import dataRouter from "./routes/dataRoutes.js";
 import awsRouter from "./routes/awsRoutes.js"
 import profileRouter from "./routes/profileRoutes.js"
-import imageRouter from "./routes/imageRoutes.js"
+import recipeRouter from "./routes/recipeRoutes.js"
 app.use(cors());
 app.use(express.json());
 
-app.use("/data", dataRouter)
 app.use("/aws", awsRouter)
 app.use("/profile",profileRouter)
-app.use("/images",imageRouter)
+app.use("/recipes",recipeRouter)
 
 const server = app.listen(5000, () => {
     console.log("server has started on port 5000")
