@@ -30,5 +30,19 @@ const fetchGetIntoAWS = async (url) => {
     return file;
 }
 
+const fetchPutImage = async (endpoint_file_name, accessToken) => {
+    var request = await fetch("http://localhost:5000/images",
+        {
+            method: "POST",
+            headers: {Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json"},
+            body:JSON.stringify({"file": endpoint_file_name})
+        });
+    return await request.json()
+};
 
-export {fetchPutPresignedUrl,fetchPutIntoAWS, fetchGetPresignedUrl, fetchGetIntoAWS};
+const fetchAllImages = async () => {
+    var request = await fetch("http://localhost:5000/images", { method: "GET" });
+    return await request.json();
+};
+
+export {fetchPutPresignedUrl,fetchPutIntoAWS, fetchGetPresignedUrl, fetchGetIntoAWS, fetchPutImage, fetchAllImages};

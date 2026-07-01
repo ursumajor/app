@@ -1,12 +1,19 @@
 import React, { useState } from "react";
-import { fetchPutIntoAWS, fetchPutPresignedUrl } from "../fetches/awsFetch";
+import { useAuth0 } from "@auth0/auth0-react";
+import { fetchPutIntoAWS, fetchPutImage } from "../fetches/awsFetch";
 
 const UploadAndDisplayImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const { getAccessTokenWithPopup } = useAuth0();
 
   const buttonHandler = async (event) => {
-    const url = await fetchPutPresignedUrl("test4.jpg");
-    console.log(url);
+    const accessToken = await getAccessTokenWithPopup({
+      authorizationParams: {
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+        scope: "read:profile write:profile"
+      }
+    });
+    const { url } = await fetchPutImage(selectedImage.name, accessToken);
     await fetchPutIntoAWS(url, selectedImage);
   }
 

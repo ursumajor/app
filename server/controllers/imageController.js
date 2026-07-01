@@ -1,28 +1,34 @@
+import { randomUUID } from "crypto";
 import uploadFile from "../models/aws/upload-file.js";
 import downloadFile from "../models/aws/download-file.js";
 import { getPresignedGetUrl, getPresignedPutUrl } from "../models/aws/get-presigned-url.js";
-import {getAllImageData, getImageDatum, inputImageDatum, editImageDatum, deleteImageDatum} from "../models/imageModels.js"
+import {inputImage, getAllImages} from "../models/imageModels.js"
+import { findOrCreateUser } from "../models/userModels.js"
 
-
+const getImages = async (req, res) => {
+    try {
+        const images = await getAllImages();
+        res.json(images);
+    } catch(err) {
+        console.error(err.message);
+    }
+}
 
 const requestImageUpload = async (req, res) => {
+
     try {
-        const url = getPresignedGetUrl(req.body.file);
-        res.json(url);
+        const auth0_id = req.auth.payload.sub;
+        const originalName = req.body.file
+        const ext = originalName.includes(".") ? originalName.split(".").pop() : "";
+        const fname = ext ? `${randomUUID()}.${ext}` : randomUUID();
+        const user = await findOrCreateUser(auth0_id);
+        const image = await inputImage(fname, user.id);
+        const url = getPresignedPutUrl(fname);
+        res.json({ url, fname });
     } catch(err) {
         console.error(err.message);
     }
 }
 
 
-const requestPresignedPutURL = async (req, res) => {
-    try {
-        const url = getPresignedPutUrl(req.body.file);
-        res.json(url);
-    } catch(err) {
-        console.error(err.message);
-    }
-}
-
-
-export {requestUpload, requestDownload, requestPresignedGetURL, requestPresignedPutURL}
+export {requestImageUpload, getImages }
