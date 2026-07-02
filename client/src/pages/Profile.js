@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import RequireAuth from "../components/RequireAuth";
 import RecipeGrid from "../components/recipe-grid";
@@ -6,7 +7,7 @@ import UsernameForm from "../components/username-form";
 import { fetchMyProfile } from "../fetches/profileFetch";
 
 const ProfileInner = () => {
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, logout } = useAuth0();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -37,6 +38,19 @@ const ProfileInner = () => {
             {hasUsername
                 ? <h1>@{user.username}</h1>
                 : <h2>Welcome! Pick a username to get started.</h2>}
+
+            <div className="mb-3">
+                <Link to="/cookbooks">My Cookbooks</Link>
+                {" | "}
+                <Link to="/following">Following</Link>
+                {" | "}
+                <button
+                    className="btn btn-link p-0 align-baseline"
+                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                >
+                    Log Out
+                </button>
+            </div>
 
             <UsernameForm
                 initialValue={user?.username || ""}

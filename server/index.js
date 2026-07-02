@@ -2,14 +2,12 @@ import express from "express";
 const app = express();
 import cors from "cors";
 import pool from "./db.js";
-import awsRouter from "./routes/awsRoutes.js"
 import profileRouter from "./routes/profileRoutes.js"
 import recipeRouter from "./routes/recipeRoutes.js"
 import cookbookRouter from "./routes/cookbookRoutes.js"
 app.use(cors());
 app.use(express.json());
 
-app.use("/aws", awsRouter)
 app.use("/profile",profileRouter)
 app.use("/recipes",recipeRouter)
 app.use("/cookbooks",cookbookRouter)

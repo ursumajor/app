@@ -23,14 +23,12 @@ function App() {
   return (<BrowserRouter>
     <nav>
       <Link to="/recipes">Recipes</Link> |{" "}
-      <Link to="/recipes/new">New Recipe</Link> |{" "}
-      <Link to="/login">login</Link> |{" "}
+      <Link to="/recipes/new">New Recipe</Link>
+      {!isAuthenticated && (
+        <>{" "}|{" "}<Link to="/login">login</Link></>
+      )}
       {isAuthenticated && (
-        <>
-          <Link to="/following">Following</Link> |{" "}
-          <Link to="/cookbooks">Cookbooks</Link> |{" "}
-          <Link to="/profile">Profile</Link>
-        </>
+        <>{" "}|{" "}<Link to="/profile">Profile</Link></>
       )}
     </nav>
 
