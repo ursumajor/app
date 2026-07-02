@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchRecipe } from '../fetches/recipeFetch';
+import SaveToCookbook from '../components/save-to-cookbook';
+import LikeButton from '../components/like-button';
+import CommentsSection from '../components/comments-section';
 
 const RecipeDetail = () => {
     const { id } = useParams();
@@ -31,6 +34,11 @@ const RecipeDetail = () => {
                 ? <Link to={`/profile/${recipe.username}`}>{recipe.username}</Link>
                 : "anonymous"}</p>
 
+            <div className="d-flex align-items-center">
+                <LikeButton recipeId={recipe.id} />
+                <SaveToCookbook recipeId={recipe.id} />
+            </div>
+
             {recipe.image_url && (
                 <img
                     src={recipe.image_url}
@@ -55,6 +63,8 @@ const RecipeDetail = () => {
                     <li key={i}>{step}</li>
                 ))}
             </ol>
+
+            <CommentsSection recipeId={recipe.id} />
         </div>
     );
 }

@@ -33,6 +33,18 @@ const getRecipesByUserId = async (user_id) => {
     return result.rows;
 }
 
+const getRecipesFromFollowedUsers = async (user_id) => {
+    const result = await pool.query(
+        `SELECT r.*, u.username, u.pfp_url
+         FROM recipes r
+         JOIN users u ON u.id = r.user_id
+         WHERE r.user_id IN (SELECT followed_id FROM follows WHERE follower_id = $1)
+         ORDER BY r.created_at DESC, r.id DESC`,
+        [user_id]
+    );
+    return result.rows;
+}
+
 const inputRecipe = async ({ user_id, title, description, ingredients, steps, image_fname }) => {
     const result = await pool.query(
         `INSERT INTO recipes (user_id, title, description, ingredients, steps, image_fname)
@@ -42,4 +54,4 @@ const inputRecipe = async ({ user_id, title, description, ingredients, steps, im
     return result.rows[0];
 }
 
-export { getAllRecipes, getRecipe, getRecipesByUserId, inputRecipe }
+export { getAllRecipes, getRecipe, getRecipesByUserId, getRecipesFromFollowedUsers, inputRecipe }

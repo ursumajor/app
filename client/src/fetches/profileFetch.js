@@ -22,4 +22,28 @@ const fetchPublicProfile = async (username) => {
     return await request.json();
 };
 
-export { fetchMyProfile, updateMyProfile, fetchPublicProfile };
+const fetchFollowStatus = async (username, accessToken) => {
+    const request = await fetch(`${API}/profile/${username}/follow`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return await request.json();
+};
+
+const followUser = async (username, accessToken) => {
+    const request = await fetch(`${API}/profile/${username}/follow`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return await request.json();
+};
+
+const unfollowUser = async (username, accessToken) => {
+    const request = await fetch(`${API}/profile/${username}/follow`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return await request.json();
+};
+
+export { fetchMyProfile, updateMyProfile, fetchPublicProfile, fetchFollowStatus, followUser, unfollowUser };

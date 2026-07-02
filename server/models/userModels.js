@@ -46,4 +46,37 @@ const updateUser = async (id, { username, pfp_url }) => {
     return result.rows[0];
 };
 
-export {getAllUsers, getUserById, getUserByAuth0Id, insertUser, findOrCreateUser, getUserByUsername, updateUser}
+const followUser = async (follower_id, followed_id) => {
+    await pool.query(
+        `INSERT INTO follows (follower_id, followed_id)
+         VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+        [follower_id, followed_id]
+    );
+}
+
+const unfollowUser = async (follower_id, followed_id) => {
+    await pool.query(
+        "DELETE FROM follows WHERE follower_id = $1 AND followed_id = $2",
+        [follower_id, followed_id]
+    );
+}
+
+const isFollowing = async (follower_id, followed_id) => {
+    const result = await pool.query(
+        "SELECT 1 FROM follows WHERE follower_id = $1 AND followed_id = $2",
+        [follower_id, followed_id]
+    );
+    return result.rows.length > 0;
+}
+
+const getFollowCounts = async (user_id) => {
+    const result = await pool.query(
+        `SELECT
+            (SELECT COUNT(*) FROM follows WHERE followed_id = $1)::int AS followers,
+            (SELECT COUNT(*) FROM follows WHERE follower_id = $1)::int AS following`,
+        [user_id]
+    );
+    return result.rows[0];
+}
+
+export {getAllUsers, getUserById, getUserByAuth0Id, insertUser, findOrCreateUser, getUserByUsername, updateUser, followUser, unfollowUser, isFollowing, getFollowCounts}
