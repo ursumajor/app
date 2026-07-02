@@ -8,6 +8,7 @@ const FollowingFeedInner = () => {
     const { getAccessTokenSilently } = useAuth0();
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const load = async () => {
@@ -16,6 +17,7 @@ const FollowingFeedInner = () => {
                 setRecipes(await fetchFollowingRecipes(token));
             } catch (err) {
                 console.error(err.message);
+                setError(true);
             } finally {
                 setLoading(false);
             }
@@ -24,6 +26,7 @@ const FollowingFeedInner = () => {
     }, []);
 
     if (loading) return <div className="container mt-5">Loading...</div>;
+    if (error) return <div className="container mt-5">Could not load your feed. Please try again.</div>;
 
     return (
         <div className="container mt-5">

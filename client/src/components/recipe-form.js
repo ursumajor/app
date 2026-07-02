@@ -3,8 +3,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { fetchCreateRecipe } from "../fetches/recipeFetch";
 import { fetchPutIntoAWS } from "../fetches/awsFetch";
 
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB
+
 const RecipeForm = () => {
-  const { getAccessTokenWithPopup } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -12,9 +14,30 @@ const RecipeForm = () => {
   const [steps, setSteps] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [status, setStatus] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const toLines = (text) =>
     text.split("\n").map((line) => line.trim()).filter(Boolean);
+
+  const onFileChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      setSelectedImage(null);
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      setStatus("Please choose an image file.");
+      setSelectedImage(null);
+      return;
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      setStatus("Image must be under 5 MB.");
+      setSelectedImage(null);
+      return;
+    }
+    setStatus(null);
+    setSelectedImage(file);
+  };
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -22,14 +45,10 @@ const RecipeForm = () => {
       setStatus("Please add a photo of your dish.");
       return;
     }
+    setSubmitting(true);
     setStatus("Posting your recipe...");
     try {
-      const accessToken = await getAccessTokenWithPopup({
-        authorizationParams: {
-          audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-          scope: "read:profile write:profile"
-        }
-      });
+      const accessToken = await getAccessTokenSilently();
 
       const recipe = {
         title,
@@ -51,6 +70,8 @@ const RecipeForm = () => {
     } catch (err) {
       console.error(err.message);
       setStatus("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -99,7 +120,7 @@ const RecipeForm = () => {
         type="file"
         accept="image/*"
         className="form-control"
-        onChange={(e) => setSelectedImage(e.target.files[0])}
+        onChange={onFileChange}
       />
 
       {selectedImage && (
@@ -113,7 +134,9 @@ const RecipeForm = () => {
       )}
 
       <div className="mt-3">
-        <button type="submit" className="btn btn-success">Post Recipe</button>
+        <button type="submit" className="btn btn-success" disabled={submitting}>
+          {submitting ? "Posting..." : "Post Recipe"}
+        </button>
       </div>
 
       {status && <p className="mt-3">{status}</p>}

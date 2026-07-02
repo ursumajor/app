@@ -5,6 +5,7 @@ import RecipeGrid from '../components/recipe-grid';
 const Feed = () => {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const load = async () => {
@@ -12,6 +13,7 @@ const Feed = () => {
                 setRecipes(await fetchAllRecipes());
             } catch (err) {
                 console.error(err.message);
+                setError(true);
             } finally {
                 setLoading(false);
             }
@@ -20,6 +22,7 @@ const Feed = () => {
     }, []);
 
     if (loading) return <div className="container mt-5">Loading recipes...</div>;
+    if (error) return <div className="container mt-5">Could not load recipes. Please try again.</div>;
 
     return (
         <div className="container">

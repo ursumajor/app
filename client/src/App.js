@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import UserProfile from './pages/UserProfile';
 import Cookbooks from './pages/Cookbooks';
 import CookbookDetail from './pages/CookbookDetail';
+import OnboardingGate from './components/onboarding-gate';
 
 
 function App() {
@@ -33,18 +34,20 @@ function App() {
       )}
     </nav>
 
-    <Routes>
-      <Route path="/" element={<HomePage/>} />
-      <Route path="/recipes" element={<Feed/>} />
-      <Route path="/following" element={<FollowingFeed/>} />
-      <Route path="/recipes/new" element={<NewRecipe/>} />
-      <Route path="/recipes/:id" element={<RecipeDetail/>} />
-      <Route path="/login" element={<LoginPage/>} />
-      <Route path="/profile" element={<Profile/>} />
-      <Route path="/profile/:username" element={<UserProfile/>} />
-      <Route path="/cookbooks" element={<Cookbooks/>} />
-      <Route path="/cookbooks/:id" element={<CookbookDetail/>} />
-    </Routes>
+    <OnboardingGate>
+      <Routes>
+        <Route path="/" element={<HomePage/>} />
+        <Route path="/recipes" element={<Feed/>} />
+        <Route path="/following" element={<FollowingFeed/>} />
+        <Route path="/recipes/new" element={<NewRecipe/>} />
+        <Route path="/recipes/:id" element={<RecipeDetail/>} />
+        <Route path="/login" element={<LoginPage/>} />
+        <Route path="/profile" element={<Profile/>} />
+        <Route path="/profile/:username" element={<UserProfile/>} />
+        <Route path="/cookbooks" element={<Cookbooks/>} />
+        <Route path="/cookbooks/:id" element={<CookbookDetail/>} />
+      </Routes>
+    </OnboardingGate>
   </BrowserRouter>)
 }
 export default App;

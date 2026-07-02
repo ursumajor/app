@@ -8,6 +8,7 @@ const CookbooksInner = () => {
     const { getAccessTokenSilently } = useAuth0();
     const [cookbooks, setCookbooks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const [newName, setNewName] = useState("");
 
     const load = async () => {
@@ -16,6 +17,7 @@ const CookbooksInner = () => {
             setCookbooks(await fetchMyCookbooks(token));
         } catch (err) {
             console.error(err.message);
+            setError(true);
         } finally {
             setLoading(false);
         }
@@ -37,6 +39,7 @@ const CookbooksInner = () => {
     };
 
     if (loading) return <div className="container mt-5">Loading your cookbooks...</div>;
+    if (error) return <div className="container mt-5">Could not load your cookbooks. Please try again.</div>;
 
     return (
         <div className="container mt-5">
